@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import './App.css';
-import Chat from './chat';
+import Chat from './chat/chat.component';
 import { Button, Modal } from './modal';
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
     } else {
       setIsOpen(true);
     }
-  }, []);
+  }, [savedUsername]);
 
   const handleUserName = (event: ChangeEvent<HTMLInputElement>) => {
     const {
@@ -46,7 +46,6 @@ function App() {
     <>
       <h1>Bienvenido, {savedUsername || 'Invitado'}!</h1>
       <Button onClick={handleCloseSesion}>Cerrar sesión</Button>
-
       <Modal
         isOpen={isOpen}
         onClose={handleOpen}
@@ -54,7 +53,7 @@ function App() {
         handleUserName={handleUserName}
         onSave={handleSave}
       />
-      <Chat userName={savedUsername} />
+      {savedUsername && <Chat userName={savedUsername} />}
     </>
   );
 }

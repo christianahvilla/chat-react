@@ -1,10 +1,14 @@
 import { StyledButton } from './button.style';
 import { IButton } from './button.types';
 
-const Button = ({ text }: IButton) => {
+const Button = ({ text, handleSendMessage }: IButton) => {
   const isDisabled = !text;
 
-  return <StyledButton disabled={isDisabled}>Enviar</StyledButton>;
+  return (
+    <StyledButton onClick={handleSendMessage} disabled={isDisabled}>
+      Enviar
+    </StyledButton>
+  );
 };
 
 export default Button;

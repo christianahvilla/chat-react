@@ -1,3 +1,4 @@
+import { fetchMessages } from '../api/messages.api';
 import { IGenericMessage } from './chat.types';
 import { Message } from './components';
 
@@ -16,4 +17,13 @@ export const displayMessages = (messages: IGenericMessage[], user: string) => {
       <Message isSender={isSender} content={content} id={id} sender={sender} />
     );
   });
+};
+
+export const getMessages = async (
+  apiUrl: string,
+  setMessages: React.Dispatch<React.SetStateAction<IGenericMessage[]>>
+) => {
+  const data = await fetchMessages(apiUrl);
+
+  setMessages(data);
 };

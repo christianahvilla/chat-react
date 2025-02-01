@@ -14,6 +14,7 @@ export const StyledMessage = styled.div<IStyledMessage>`
   align-self: ${({ isSender }) => (isSender ? 'flex-end' : 'flex-start')};
   margin: 5px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: start;
 `;
 
 export const StyledSender = styled.p`

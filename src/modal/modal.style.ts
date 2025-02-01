@@ -42,6 +42,7 @@ export const Button = styled.button`
   transition: background 0.3s ease;
   margin-top: 10px;
   align-self: flex-end;
+  margin-bottom: 10px;
 
   &:hover {
     background-color: #0056b3;

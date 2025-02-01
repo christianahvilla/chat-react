@@ -4,6 +4,6 @@ export interface IStyledMessage {
   isSender: boolean;
 }
 
-export interface IMessage extends IGenericMessage {
+export interface IMessage extends Omit<IGenericMessage, 'date'> {
   isSender: boolean;
 }
