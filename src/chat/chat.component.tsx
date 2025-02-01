@@ -3,36 +3,26 @@ import { TextArea, Button } from './components';
 import { ChatContainer } from './style';
 import { displayMessages, getMessages } from './chat.helpers';
 import { IChat, IGenericMessage } from './chat.types';
-import io from 'socket.io-client';
+import { saveMessage } from '../api/messages.api';
 
 const Chat = ({ userName }: IChat) => {
   const [text, setText] = useState('');
   const [messages, setMessages] = useState<IGenericMessage[]>([]);
-  const apiUrl = `${import.meta.env.VITE_API_URL}/api`;
-  const socketUrl = `${import.meta.env.VITE_SOCKET_URL}`;
-  console.log(socketUrl);
+  // const apiUrl = `${import.meta.env.VITE_API_URL}:${
+  //   import.meta.env.VITE_PORT
+  // }/api`;
 
-  const socket = useMemo(
-    () => io(socketUrl, { transports: ['websocket'], withCredentials: true }),
-    [socketUrl]
-  );
+  const apiUrl = `${import.meta.env.VITE_API_URL}/api`;
 
   useEffect(() => {
-    socket.on('newMessage', (newMessage: IGenericMessage) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
-
     try {
       (() => getMessages(apiUrl, setMessages))();
     } catch (error) {
       console.error('Error: ', error);
     }
 
-    return () => {
-      socket.off('newMessage');
-      socket.disconnect();
-    };
-  }, [apiUrl, socket, socketUrl]);
+    return () => {};
+  }, [apiUrl]);
 
   const handleText = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const {
@@ -48,7 +38,11 @@ const Chat = ({ userName }: IChat) => {
     }
 
     try {
-      socket.emit('message', { content: text, sender: userName });
+      const newMessage = await saveMessage(apiUrl, {
+        content: text,
+        sender: userName,
+      });
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     } catch (error) {
       console.error('Error: ', error);
     } finally {
@@ -57,7 +51,9 @@ const Chat = ({ userName }: IChat) => {
   };
 
   const memoizedMessages = useMemo(() => {
-    return messages;
+    return messages.sort(
+      (a, b) => new Date(a.date).getDate() - new Date(b.date).getDate()
+    );
   }, [messages]);
 
   return (

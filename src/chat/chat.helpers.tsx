@@ -14,7 +14,13 @@ export const displayMessages = (messages: IGenericMessage[], user: string) => {
     const isSender = getIsSender(user, sender);
 
     return (
-      <Message isSender={isSender} content={content} id={id} sender={sender} />
+      <Message
+        key={id}
+        isSender={isSender}
+        content={content}
+        id={id}
+        sender={sender}
+      />
     );
   });
 };
