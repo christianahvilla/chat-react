@@ -13,7 +13,10 @@ const Chat = ({ userName }: IChat) => {
   console.log(socketUrl);
 
   useEffect(() => {
-    const socket = io(socketUrl);
+    const socket = io(socketUrl, {
+      transports: ['websocket'],
+      withCredentials: true,
+    });
 
     socket.on('newMessage', (newMessage: IGenericMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -45,7 +48,10 @@ const Chat = ({ userName }: IChat) => {
     }
 
     try {
-      const socket = io(socketUrl);
+      const socket = io(socketUrl, {
+        transports: ['websocket'],
+        withCredentials: true,
+      });
       socket.emit('message', { content: text, sender: userName });
     } catch (error) {
       console.error('Error: ', error);
