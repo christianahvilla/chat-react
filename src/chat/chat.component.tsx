@@ -8,12 +8,8 @@ import io from 'socket.io-client';
 const Chat = ({ userName }: IChat) => {
   const [text, setText] = useState('');
   const [messages, setMessages] = useState<IGenericMessage[]>([]);
-  const apiUrl = `${import.meta.env.VITE_API_URL}:${
-    import.meta.env.VITE_PORT
-  }/api`;
-  const socketUrl = `${import.meta.env.VITE_SOCKET_URL}:${
-    import.meta.env.VITE_SOCKET_PORT
-  }`;
+  const apiUrl = `${import.meta.env.VITE_API_URL}/api`;
+  const socketUrl = `${import.meta.env.VITE_SOCKET_URL}`;
   console.log(socketUrl);
 
   useEffect(() => {
