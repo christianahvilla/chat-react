@@ -12,12 +12,12 @@ const Chat = ({ userName }: IChat) => {
   const socketUrl = `${import.meta.env.VITE_SOCKET_URL}`;
   console.log(socketUrl);
 
-  useEffect(() => {
-    const socket = io(socketUrl, {
-      transports: ['websocket'],
-      withCredentials: true,
-    });
+  const socket = useMemo(
+    () => io(socketUrl, { transports: ['websocket'], withCredentials: true }),
+    [socketUrl]
+  );
 
+  useEffect(() => {
     socket.on('newMessage', (newMessage: IGenericMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
@@ -30,9 +30,9 @@ const Chat = ({ userName }: IChat) => {
 
     return () => {
       socket.off('newMessage');
-      socket.off('messageError');
+      socket.disconnect();
     };
-  }, [apiUrl, socketUrl]);
+  }, [apiUrl, socket, socketUrl]);
 
   const handleText = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const {
@@ -48,10 +48,6 @@ const Chat = ({ userName }: IChat) => {
     }
 
     try {
-      const socket = io(socketUrl, {
-        transports: ['websocket'],
-        withCredentials: true,
-      });
       socket.emit('message', { content: text, sender: userName });
     } catch (error) {
       console.error('Error: ', error);
