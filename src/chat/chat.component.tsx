@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { TextArea, Button } from './components';
 import { ChatContainer } from './style';
 import { displayMessages, getMessages } from './chat.helpers';
@@ -14,15 +14,21 @@ const Chat = ({ userName }: IChat) => {
 
   const apiUrl = `${import.meta.env.VITE_API_URL}/api`;
 
-  useEffect(() => {
+  const loadMessages = useCallback(async () => {
     try {
-      (() => getMessages(apiUrl, setMessages))();
+      await getMessages(apiUrl, setMessages);
     } catch (error) {
-      console.error('Error: ', error);
+      console.error('Error: :', error);
     }
-
-    return () => {};
   }, [apiUrl]);
+
+  useEffect(() => {
+    loadMessages();
+
+    const intervalId = setInterval(() => loadMessages(), 5000);
+
+    return () => clearInterval(intervalId);
+  }, [apiUrl, loadMessages]);
 
   const handleText = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const {
